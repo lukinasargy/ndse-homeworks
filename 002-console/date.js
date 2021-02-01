@@ -5,15 +5,15 @@ const argv = yargs(hideBin(process.argv))
     .alias("y", "year")
     .option("year", {
         alias: "y",
-        description: "Show current year",
+        description: "year",
     })
     .option("month", {
         alias: "m",
-        description: "Show current month",
+        description: "month",
     })
     .option("date", {
         alias: "d",
-        description: "Show current date",
+        description: "date",
     }).argv;
 
 const currentDate = new Date();
@@ -41,7 +41,7 @@ const showCurrentDate = () => {
     if (argv.date) {
         console.log(currentDate.getDate());
     }
-    if (!argv.year && !argv.month & !argv.date) {
+    if (!argv.year && !argv.month && !argv.date) {
         console.log(currentDate.toISOString());
     }
 };

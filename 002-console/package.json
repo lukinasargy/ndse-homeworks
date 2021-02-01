@@ -17,7 +17,8 @@
     },
     "homepage": "https://github.com/lukinasargy/ndse-homeworks#readme",
     "bin": {
-        "date": "date.js"
+        "date": "date.js",
+        "number": "number.js"
     },
     "dependencies": {
         "yargs": "^16.2.0"

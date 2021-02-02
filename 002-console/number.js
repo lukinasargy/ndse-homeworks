@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-// const yargs = require("yargs/yargs");
-// const { hideBin } = require("yargs/helpers");
-// const argv = yargs(hideBin(process.argv)).argv;
 const readline = require("readline");
 const maxNumber = 2;
 const number = Math.round(Math.random() * maxNumber);

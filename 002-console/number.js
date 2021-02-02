@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const readline = require("readline");
-const maxNumber = 2;
+const maxNumber = 100;
 const number = Math.round(Math.random() * maxNumber);
 
 const input = readline.createInterface(process.stdin);

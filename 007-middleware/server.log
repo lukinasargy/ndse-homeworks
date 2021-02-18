@@ -1,0 +1,4 @@
+21:35:40 GET: /api/books user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36
+21:35:41 GET: /api/books user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36
+21:35:51 GET: /api/books/upload user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36
+21:36:7 POST: /api/books/upload user-agent: PostmanRuntime/7.26.8

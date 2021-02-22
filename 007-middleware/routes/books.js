@@ -1,3 +1,4 @@
+const fs = require("fs");
 const express = require("express");
 const router = express.Router();
 const { Book } = require("../models");
@@ -13,15 +14,11 @@ const stor = {
         `description books ${el}`,
         `authors ${el}`,
         `favorite ${el}`,
+        `fileCover ${el}`,
+        `fileName ${el}`,
         `fileBook ${el}`,
-        `fileName ${el}`
     );
     stor.books.push(newBook);
-});
-
-router.get("/api/user/login", (req, res) => {
-    res.json({ id: 1, mail: "test@mail.ru" });
-    res.status(201);
 });
 
 router.get("/", (req, res) => {
@@ -42,24 +39,33 @@ router.get("/:id", (req, res) => {
     }
 });
 
-router.post("/", (req, res) => {
+router.post("/", fileMiddleware.single("fileBook"),(req, res) => {
     const { books } = stor;
     const {
-        title,
-        description,
-        authors,
-        favorite,
-        fileBook,
-        fileName,
+        title="",
+        description="",
+        authors="",
+        favorite="",
+        fileCover="",
+        fileBook="",
     } = req.body;
+
+    if (req.file) {
+        const { path, filename } = req.file;
+        console.log(path);
+        fileName = filename;
+    } else {
+        res.json("file error");
+    }
 
     const newBook = new Book(
         title,
         description,
         authors,
         favorite,
-        fileBook,
-        fileName
+        fileCover,
+        fileName,
+        fileBook
     );
     books.push(newBook);
 
@@ -67,16 +73,25 @@ router.post("/", (req, res) => {
     res.json(newBook);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
     const { books } = stor;
     const {
         title,
         description,
         authors,
         favorite,
-        fileBook,
-        fileName,
+        fileCover,
+        fileBook
     } = req.body;
+
+    if (req.file) {
+        const { path , filename} = req.file;
+        console.log(path);
+        fileName = filename;
+    } else {
+        res.json("file error");
+    }
+
     const { id } = req.params;
     const idx = books.findIndex((el) => el.id === id);
 
@@ -87,13 +102,14 @@ router.put("/:id", (req, res) => {
             description,
             authors,
             favorite,
-            fileBook,
+            fileCover,
             fileName,
+            fileBook
         };
         res.json(books[idx]);
     } else {
         res.status(404);
-        res.json("books | not found");
+        res.json("book | not found");
     }
 });
 
@@ -110,27 +126,27 @@ router.delete("/:id", (req, res) => {
         res.json("books | not found");
     }
 });
-// загрузка файлов
-router.post("/upload", fileMiddleware.single("cover"), (req, res) => {
-    if (req.file) {
-        const { path } = req.file;
-        console.log(path);
-
-        res.json(path);
-    } else {
-        res.json(null);
-    }
-});
 
 router.get("/:id/download", (req, res) => {
-    res.download(
-        __dirname + "/../public/img/2020-12-07-cover.png",
-        "cover.png",
-        (err) => {
-            if (err) {
-                res.status(404).json();
+    const { id } = req.params;
+    const { books } = stor;
+    const idx = books.findIndex((el) => el.id === id);
+    if (idx !== -1) {
+        const fileName = books[idx].fileName;
+        res.download(
+            __dirname + `/../public/upload/${fileName}`,
+            `book.${fileName.split('.').pop()}`,
+            (err) => {
+                if (err) {
+                    res.status(404);
+                    res.json("file | not found");
+                }
             }
-        }
-    );
+        );
+    } else {
+        res.status(404);
+        res.json("book | not found");
+    }
+   
 });
 module.exports = router;

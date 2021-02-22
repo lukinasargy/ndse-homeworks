@@ -10,7 +10,7 @@ const booksRouter = require('./routes/books');
 
 const app = express();
 
-app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(cors());
 app.use(loggerMiddleware);
 

@@ -1,4 +1,3 @@
-const fs = require("fs");
 const express = require("express");
 const router = express.Router();
 const { Book } = require("../models");
@@ -16,7 +15,7 @@ const stor = {
         `favorite ${el}`,
         `fileCover ${el}`,
         `fileName ${el}`,
-        `fileBook ${el}`,
+        `fileBook ${el}`
     );
     stor.books.push(newBook);
 });
@@ -39,16 +38,17 @@ router.get("/:id", (req, res) => {
     }
 });
 
-router.post("/", fileMiddleware.single("fileBook"),(req, res) => {
+router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
     const { books } = stor;
     const {
-        title="",
-        description="",
-        authors="",
-        favorite="",
-        fileCover="",
-        fileBook="",
+        title = "",
+        description = "",
+        authors = "",
+        favorite = "",
+        fileCover = "",
+        fileBook = "",
     } = req.body;
+    let fileName;
 
     if (req.file) {
         const { path, filename } = req.file;
@@ -56,6 +56,7 @@ router.post("/", fileMiddleware.single("fileBook"),(req, res) => {
         fileName = filename;
     } else {
         res.json("file error");
+        return;
     }
 
     const newBook = new Book(
@@ -81,15 +82,17 @@ router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
         authors,
         favorite,
         fileCover,
-        fileBook
+        fileBook,
     } = req.body;
+    let fileName;
 
     if (req.file) {
-        const { path , filename} = req.file;
+        const { path, filename } = req.file;
         console.log(path);
         fileName = filename;
     } else {
         res.json("file error");
+        return;
     }
 
     const { id } = req.params;
@@ -104,7 +107,7 @@ router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
             favorite,
             fileCover,
             fileName,
-            fileBook
+            fileBook,
         };
         res.json(books[idx]);
     } else {
@@ -135,7 +138,7 @@ router.get("/:id/download", (req, res) => {
         const fileName = books[idx].fileName;
         res.download(
             __dirname + `/../public/upload/${fileName}`,
-            `book.${fileName.split('.').pop()}`,
+            `book.${fileName.split(".").pop()}`,
             (err) => {
                 if (err) {
                     res.status(404);
@@ -147,6 +150,5 @@ router.get("/:id/download", (req, res) => {
         res.status(404);
         res.json("book | not found");
     }
-   
 });
 module.exports = router;

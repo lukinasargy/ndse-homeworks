@@ -7,6 +7,7 @@ const errorMiddleware = require('./middleware/error');
 
 const indexRouter = require('./routes/index');
 const booksRouter = require('./routes/books');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/public', express.static(__dirname+"/public"));
 
 app.use('/', indexRouter);
 app.use('/api/books', booksRouter);
+app.use('/api/user', userRouter);
 
 app.use(errorMiddleware);
 

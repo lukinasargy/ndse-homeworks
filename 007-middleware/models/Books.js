@@ -8,6 +8,7 @@ class Books {
         favorite = "",
         fileCover = "",
         fileName = "",
+        fileBook="",
         id = uidGenerator.generateUniqueId(),
     ) {
         this.title = title;
@@ -16,6 +17,7 @@ class Books {
         this.favorite = favorite;
         this.fileCover = fileCover;
         this.fileName = fileName;
+        this.fileBook = fileBook;
         this.id = id;
     }
 }

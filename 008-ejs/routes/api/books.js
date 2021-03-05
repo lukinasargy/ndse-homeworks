@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { Book } = require("../models");
-const fileMiddleware = require("../middleware/file");
+const { Book } = require("../../models");
+const fileMiddleware = require("../../middleware/file");
 
 const stor = {
     books: [],

@@ -12,9 +12,9 @@ const stor = {
         `books ${el}`,
         `description books ${el}`,
         `authors ${el}`,
-        `favorite ${el}`,
+        false,
         `fileCover ${el}`,
-        `fileName ${el}`,
+        `2021-02-22T21-32-00.287Z-book.pdf`,
         `fileBook ${el}`
     );
     stor.books.push(newBook);
@@ -35,24 +35,25 @@ router.get('/create', (req, res) => {
         books: {},
     });
 });
-router.post("/create", fileMiddleware.single("fileBook"), (req, res) => {
+router.post("/create", fileMiddleware.fields([
+    { name: 'fileBook', maxCount: 1 },
+    { name: 'fileCover', maxCount: 1 }
+  ]), (req, res) => {
     const { books } = stor;
     const {
         title = "",
         description = "",
         authors = "",
-        favorite = "",
+        favorite = false,
         fileCover = "",
         fileBook = "",
     } = req.body;
     let fileName;
 
-    if (req.file) {
-        const { path, filename } = req.file;
-        console.log(path);
+    if (req.files) {
+        const { filename = "" } = req.files["fileBook"][0];
         fileName = filename;
     } else {
-        console.log(req)
         res.json("file error");
         return;
     }
@@ -98,7 +99,10 @@ router.get('/update/:id', (req, res) => {
         res.status(404).redirect('/404');
     }
 });
-router.post("/update/:id", fileMiddleware.single("fileBook"), (req, res) => {
+router.post("/update/:id", fileMiddleware.fields([
+    { name: 'fileBook', maxCount: 1 },
+    { name: 'fileCover', maxCount: 1 }
+  ]), (req, res) => {
     const { books } = stor;
     const {
         title,
@@ -110,9 +114,8 @@ router.post("/update/:id", fileMiddleware.single("fileBook"), (req, res) => {
     } = req.body;
     let fileName;
 
-    if (req.file) {
-        const { path, filename } = req.file;
-        console.log(path);
+    if (req.files) {
+        const { filename ="" } = req.files["fileBook"][0];
         fileName = filename;
     } else {
         res.json("file error");
@@ -133,10 +136,9 @@ router.post("/update/:id", fileMiddleware.single("fileBook"), (req, res) => {
             fileName,
             fileBook,
         };
-        res.json(books[idx]);
+        res.redirect(`/books/${id}`);
     } else {
-        res.status(404);
-        res.json("book | not found");
+        res.status(404).redirect('/404');
     }
 });
 
@@ -161,8 +163,8 @@ router.get("/:id/download", (req, res) => {
     if (idx !== -1) {
         const fileName = books[idx].fileName;
         res.download(
-            __dirname + `/../public/upload/${fileName}`,
-            `${fileName.split("_").pop()}`,
+            __dirname + `/../public/book/${fileName}`,
+            `${fileName.split("_filename_").pop()}`,
             (err) => {
                 if (err) {
                     res.status(404);

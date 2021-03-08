@@ -52,7 +52,6 @@ router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
 
     if (req.file) {
         const { path, filename } = req.file;
-        console.log(path);
         fileName = filename;
     } else {
         res.json("file error");
@@ -88,7 +87,6 @@ router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
 
     if (req.file) {
         const { path, filename } = req.file;
-        console.log(path);
         fileName = filename;
     } else {
         res.json("file error");
@@ -137,7 +135,7 @@ router.get("/:id/download", (req, res) => {
     if (idx !== -1) {
         const fileName = books[idx].fileName;
         res.download(
-            __dirname + `/../public/upload/${fileName}`,
+            __dirname + `/../public/book/${fileName}`,
             `book.${fileName.split(".").pop()}`,
             (err) => {
                 if (err) {

@@ -2,10 +2,14 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'public/upload')
+    if (file.fieldname === "fileCover") {
+      cb(null, 'public/cover');
+      return;
+    }
+    cb(null, 'public/book')
   },
   filename(req, file, cb) {
-    cb(null, `${new Date().toISOString().replace(/:/g, '-')}_${file.originalname}`)
+    cb(null, `${new Date().toISOString().replace(/:/g, '-')}_filename_${file.originalname}`)
   }
 });
 

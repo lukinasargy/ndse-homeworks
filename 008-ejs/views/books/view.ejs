@@ -8,7 +8,8 @@
             <div class="card-body">
 
                 <h5 class="card-title"><%= books.title %></h5>
-                <p class="card-text"><%= books.desc %>.</p>
+                <p class="card-text"><%= books.desc %></p>
+                <p class="card-text"><a href="public/upload/<%= books.fileBook %>"><%= books.fileBook %></a></p>
 
                 <div class="text-right">
                     <a class="btn btn-sm btn-primary" href="/books/update/<%= books.id %>">

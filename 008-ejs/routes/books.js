@@ -28,20 +28,14 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {
-    const { books } = stor;
-    const { id } = req.params;
-    const idx = books.findIndex((el) => el.id === id);
 
-    if (idx !== -1) {
-        res.json(books[idx]);
-    } else {
-        res.status(404);
-        res.json("book | not found");
-    }
+router.get('/create', (req, res) => {
+    res.render("books/create", {
+        title: "Books | create",
+        books: {},
+    });
 });
-
-router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
+router.post("/create", fileMiddleware.single("fileBook"), (req, res) => {
     const { books } = stor;
     const {
         title = "",
@@ -57,9 +51,11 @@ router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
         const { path, filename } = req.file;
         console.log(path);
         fileName = filename;
+        console.log(req.file)
     } else {
-        res.json("file error");
-        return;
+        console.log(req)
+        // res.json("file error");
+        // return;
     }
 
     const newBook = new Book(
@@ -72,12 +68,38 @@ router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
         fileBook
     );
     books.push(newBook);
-
-    res.status(201);
-    res.json(newBook);
+    res.redirect('/books')
 });
 
-router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
+router.get('/:id', (req, res) => {
+    const {books} = stor;
+    const {id} = req.params;
+    const idx = books.findIndex(el => el.id === id);
+
+    if (idx !== -1) {
+        res.render("books/view", {
+            title: "Books | view",
+            books: books[idx],
+        });
+    } else {
+        res.status(404).redirect('/404');
+    }
+});
+router.get('/update/:id', (req, res) => {
+    const {books} = stor;
+    const {id} = req.params;
+    const idx = books.findIndex(el => el.id === id);
+
+    if (idx !== -1) {
+        res.render("books/update", {
+            title: "Books | view",
+            books: books[idx],
+        });
+    } else {
+        res.status(404).redirect('/404');
+    }
+});
+router.post("/update/:id", fileMiddleware.single("fileBook"), (req, res) => {
     const { books } = stor;
     const {
         title,

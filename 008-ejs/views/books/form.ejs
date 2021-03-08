@@ -1,4 +1,4 @@
-<form method="POST" class="mt-5">
+<form method="POST" class="mt-5" enctype="multipart/form-data">
     <div class="form-group">
         <label for="inputTitle">Заголовок</label>
         <input type="text"
@@ -8,12 +8,12 @@
                id="inputTitle">
     </div>
     <div class="form-group">
-        <label for="inputDesc">Описание</label>
+        <label for="inputDesc">Файл книги</label>
         <input type="file"
                value="<%= books.fileBook %>"
                name="fileBook"
                class="form-control"
-               id="inputFile"
+               id="fileBook"
                accept="application/pdf, text/plain, image/png, image/jpg, image/jpeg"
                />
     </div>

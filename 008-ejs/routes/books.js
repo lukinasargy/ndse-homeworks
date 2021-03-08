@@ -51,11 +51,10 @@ router.post("/create", fileMiddleware.single("fileBook"), (req, res) => {
         const { path, filename } = req.file;
         console.log(path);
         fileName = filename;
-        console.log(req.file)
     } else {
         console.log(req)
-        // res.json("file error");
-        // return;
+        res.json("file error");
+        return;
     }
 
     const newBook = new Book(
@@ -141,7 +140,7 @@ router.post("/update/:id", fileMiddleware.single("fileBook"), (req, res) => {
     }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/delete/:id", (req, res) => {
     const { books } = stor;
     const { id } = req.params;
     const idx = books.findIndex((el) => el.id === id);
@@ -163,7 +162,7 @@ router.get("/:id/download", (req, res) => {
         const fileName = books[idx].fileName;
         res.download(
             __dirname + `/../public/upload/${fileName}`,
-            `book.${fileName.split(".").pop()}`,
+            `${fileName.split("_").pop()}`,
             (err) => {
                 if (err) {
                     res.status(404);

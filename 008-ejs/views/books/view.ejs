@@ -9,13 +9,14 @@
 
                 <h5 class="card-title"><%= books.title %></h5>
                 <p class="card-text"><%= books.description %></p>
+                <p class="card-text"><%= books.authors %></p>
                 <p class="card-text"><%= books.favorite ? "в Избранных" : ""%></p>
                 <p class="card-text"><a href="<%= books.id %>/download"><%= books.fileName.split("_filename_").pop() %></a></p>
                 <div class="text-right">
-                    <a class="btn btn-sm btn-primary" href="/books/update/<%= books.id %>">
+                    <a class="btn btn-sm btn-primary" href="/update/<%= books.id %>">
                         <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <form action="/books/delete/<%= books.id %>" method="POST" class="d-inline">
+                    <form action="/delete/<%= books.id %>" method="POST" class="d-inline">
                         <button class="btn btn-sm btn-danger">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>

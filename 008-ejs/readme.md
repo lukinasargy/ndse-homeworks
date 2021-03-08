@@ -2,4 +2,4 @@
 ```npm start``` чтобы запустить проект <br/>
 ```npm run dev``` чтобы запустить проект с nodemon <br/>
 
-```https://lukinasargy-ejs.herokuapp.com/``` <b>heroku app</b>
+<a href="https://lukinasargy-ejs.herokuapp.com/"><b>heroku app</b></a>

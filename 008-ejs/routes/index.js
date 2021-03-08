@@ -14,7 +14,7 @@ const stor = {
         `authors ${el}`,
         false,
         `fileCover ${el}`,
-        `2021-02-22T21-32-00.287Z-book.pdf`,
+        `2021-02-22T21-32-00.287Z_filename_book.pdf`,
         `fileBook ${el}`
     );
     stor.books.push(newBook);

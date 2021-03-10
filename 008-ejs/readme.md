@@ -1,4 +1,5 @@
 ```npm i``` чтобы установить проект <br/>
 ```npm start``` чтобы запустить проект <br/>
 ```npm run dev``` чтобы запустить проект с nodemon <br/>
-```fileBook``` - поле для файла книги с расширением [**pdf,txt,jpeg,jpg,png**]
+
+<a href="https://lukinasargy-ejs.herokuapp.com/"><b>heroku app</b></a>

@@ -12,9 +12,9 @@ const stor = {
         `books ${el}`,
         `description books ${el}`,
         `authors ${el}`,
-        `favorite ${el}`,
+        false,
         `fileCover ${el}`,
-        `fileName ${el}`,
+        `2021-02-22T21-32-00.287Z_filename_book.pdf`,
         `fileBook ${el}`
     );
     stor.books.push(newBook);
@@ -22,37 +22,36 @@ const stor = {
 
 router.get("/", (req, res) => {
     const { books } = stor;
-    res.json(books);
+    res.render("books/index", {
+        title: "Books",
+        books: books,
+    });
 });
 
-router.get("/:id", (req, res) => {
-    const { books } = stor;
-    const { id } = req.params;
-    const idx = books.findIndex((el) => el.id === id);
 
-    if (idx !== -1) {
-        res.json(books[idx]);
-    } else {
-        res.status(404);
-        res.json("book | not found");
-    }
+router.get('/create', (req, res) => {
+    res.render("books/create", {
+        title: "Books | create",
+        books: {},
+    });
 });
-
-router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
+router.post("/create", fileMiddleware.fields([
+    { name: 'fileBook', maxCount: 1 },
+    { name: 'fileCover', maxCount: 1 }
+  ]), (req, res) => {
     const { books } = stor;
     const {
         title = "",
         description = "",
         authors = "",
-        favorite = "",
+        favorite = false,
         fileCover = "",
         fileBook = "",
     } = req.body;
     let fileName;
 
-    if (req.file) {
-        const { path, filename } = req.file;
-        console.log(path);
+    if (req.files) {
+        const { filename = "" } = req.files["fileBook"][0];
         fileName = filename;
     } else {
         res.json("file error");
@@ -69,12 +68,41 @@ router.post("/", fileMiddleware.single("fileBook"), (req, res) => {
         fileBook
     );
     books.push(newBook);
-
-    res.status(201);
-    res.json(newBook);
+    res.redirect('/')
 });
 
-router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
+router.get('/view/:id', (req, res) => {
+    const {books} = stor;
+    const {id} = req.params;
+    const idx = books.findIndex(el => el.id === id);
+
+    if (idx !== -1) {
+        res.render("books/view", {
+            title: "Books | view",
+            books: books[idx],
+        });
+    } else {
+        res.status(404).redirect('/404');
+    }
+});
+router.get('/update/:id', (req, res) => {
+    const {books} = stor;
+    const {id} = req.params;
+    const idx = books.findIndex(el => el.id === id);
+
+    if (idx !== -1) {
+        res.render("books/update", {
+            title: "Books | update",
+            books: books[idx],
+        });
+    } else {
+        res.status(404).redirect('/404');
+    }
+});
+router.post("/update/:id", fileMiddleware.fields([
+    { name: 'fileBook', maxCount: 1 },
+    { name: 'fileCover', maxCount: 1 }
+  ]), (req, res) => {
     const { books } = stor;
     const {
         title,
@@ -86,9 +114,8 @@ router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
     } = req.body;
     let fileName;
 
-    if (req.file) {
-        const { path, filename } = req.file;
-        console.log(path);
+    if (req.files) {
+        const { filename ="" } = req.files["fileBook"][0];
         fileName = filename;
     } else {
         res.json("file error");
@@ -109,24 +136,21 @@ router.put("/:id", fileMiddleware.single("fileBook"), (req, res) => {
             fileName,
             fileBook,
         };
-        res.json(books[idx]);
+        res.redirect(`/view/${id}`);
     } else {
-        res.status(404);
-        res.json("book | not found");
+        res.status(404).redirect('/404');
     }
 });
 
-router.delete("/:id", (req, res) => {
+router.post("/delete/:id", (req, res) => {
     const { books } = stor;
     const { id } = req.params;
     const idx = books.findIndex((el) => el.id === id);
-
     if (idx !== -1) {
         books.splice(idx, 1);
-        res.json("ok");
+        res.redirect(`/`);
     } else {
-        res.status(404);
-        res.json("books | not found");
+        res.status(404).redirect('/404');
     }
 });
 
@@ -137,18 +161,16 @@ router.get("/:id/download", (req, res) => {
     if (idx !== -1) {
         const fileName = books[idx].fileName;
         res.download(
-            __dirname + `/../public/upload/${fileName}`,
-            `book.${fileName.split(".").pop()}`,
+            __dirname + `/../public/book/${fileName}`,
+            `${fileName.split("_filename_").pop()}`,
             (err) => {
                 if (err) {
-                    res.status(404);
-                    res.json("file | not found");
+                    res.status(404).redirect('/404');
                 }
             }
         );
     } else {
-        res.status(404);
-        res.json("book | not found");
+        res.status(404).redirect('/404');
     }
 });
 module.exports = router;

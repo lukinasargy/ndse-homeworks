@@ -1,6 +1,6 @@
-FROM node:latest
+FROM node:alpine
 
-WORKDIR /009-docker
+WORKDIR /009-docker/library
 
 COPY package.json ./
 

@@ -1,0 +1,16 @@
+version: "3.3"
+services: 
+  counter:
+    build: ./counter
+    ports: 
+      - 3001:3001
+    environment: 
+      - PORT=3001
+    command: npm start
+  library:
+    build: ./library
+    ports: 
+      - 3000:3000
+    environment: 
+      - PORT=3000
+    command: npm start

@@ -4,9 +4,9 @@
 
 <a href="https://lukinasargy-ejs.herokuapp.com/"><b>heroku app</b></a>
 
-###Задание 2###
+<h3>Задание 2</h3>
 
-####Задание 2.1####
+<h4>Задание 2.1</h4>
 ```db.books.insertMany(
    {
     title: "Book 1",
@@ -24,10 +24,10 @@
     authors: "Authors 3"
     },
 )```
-####Задание 2.2####
+<h4>Задание 2.2</h4>
 `db.books.find({ title: "Book 1"}).limit(1)`
 
-####Задание 2.3####
+<h4>Задание 2.3</h4>
 ```db.books.updateOne(
     {_id: "123456"},
     {

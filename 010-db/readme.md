@@ -7,6 +7,7 @@
 <h3>Задание 2</h3>
 
 <h4>Задание 2.1</h4>
+
 ```db.books.insertMany(
    {
     title: "Book 1",
@@ -25,9 +26,11 @@
     },
 )```
 <h4>Задание 2.2</h4>
+
 `db.books.find({ title: "Book 1"}).limit(1)`
 
 <h4>Задание 2.3</h4>
+
 ```db.books.updateOne(
     {_id: "123456"},
     {

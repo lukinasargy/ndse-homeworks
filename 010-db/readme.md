@@ -8,7 +8,8 @@
 
 <h4>Задание 2.1</h4>
 
-```db.books.insertMany(
+```
+db.books.insertMany(
    {
     title: "Book 1",
     description: "Description 1",
@@ -24,7 +25,8 @@
     description: "Description 3",
     authors: "Authors 3"
     },
-)```
+)
+```
 
 <h4>Задание 2.2</h4>
 
@@ -32,9 +34,11 @@
 
 <h4>Задание 2.3</h4>
 
-```db.books.updateOne(
+```
+db.books.updateOne(
     {_id: "123456"},
     {
         $set: { description:"Description updated", authors:"Authors updated"}
     }
-)```
+)
+```

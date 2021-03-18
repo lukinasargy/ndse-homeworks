@@ -1,7 +1,10 @@
 const express = require("express");
+const axios = require("axios");
 const router = express.Router();
 const { Book } = require("../models");
 const fileMiddleware = require("../middleware/file");
+
+const ADDRESS = process.env.ADDRESS || "localhost";
 
 const stor = {
     books: [],
@@ -15,7 +18,8 @@ const stor = {
         false,
         `fileCover ${el}`,
         `2021-02-22T21-32-00.287Z_filename_book.pdf`,
-        `fileBook ${el}`
+        `fileBook ${el}`,
+        `${el}`,
     );
     stor.books.push(newBook);
 });
@@ -28,106 +32,39 @@ router.get("/", (req, res) => {
     });
 });
 
-
-router.get('/create', (req, res) => {
+router.get("/create", (req, res) => {
     res.render("books/create", {
         title: "Books | create",
         books: {},
     });
 });
-router.post("/create", fileMiddleware.fields([
-    { name: 'fileBook', maxCount: 1 },
-    { name: 'fileCover', maxCount: 1 }
-  ]), (req, res) => {
-    const { books } = stor;
-    const {
-        title = "",
-        description = "",
-        authors = "",
-        favorite = false,
-        fileCover = "",
-        fileBook = "",
-    } = req.body;
-    let fileName;
+router.post(
+    "/create",
+    fileMiddleware.fields([
+        { name: "fileBook", maxCount: 1 },
+        { name: "fileCover", maxCount: 1 },
+    ]),
+    (req, res) => {
+        const { books } = stor;
+        const {
+            title = "",
+            description = "",
+            authors = "",
+            favorite = false,
+            fileCover = "",
+            fileBook = "",
+        } = req.body;
+        let fileName;
 
-    if (req.files) {
-        const { filename = "" } = req.files["fileBook"][0];
-        fileName = filename;
-    } else {
-        res.json("file error");
-        return;
-    }
+        if (req.files) {
+            const { filename = "" } = req.files["fileBook"][0];
+            fileName = filename;
+        } else {
+            res.json("file error");
+            return;
+        }
 
-    const newBook = new Book(
-        title,
-        description,
-        authors,
-        favorite,
-        fileCover,
-        fileName,
-        fileBook
-    );
-    books.push(newBook);
-    res.redirect('/')
-});
-
-router.get('/view/:id', (req, res) => {
-    const {books} = stor;
-    const {id} = req.params;
-    const idx = books.findIndex(el => el.id === id);
-
-    if (idx !== -1) {
-        res.render("books/view", {
-            title: "Books | view",
-            books: books[idx],
-        });
-    } else {
-        res.status(404).redirect('/404');
-    }
-});
-router.get('/update/:id', (req, res) => {
-    const {books} = stor;
-    const {id} = req.params;
-    const idx = books.findIndex(el => el.id === id);
-
-    if (idx !== -1) {
-        res.render("books/update", {
-            title: "Books | update",
-            books: books[idx],
-        });
-    } else {
-        res.status(404).redirect('/404');
-    }
-});
-router.post("/update/:id", fileMiddleware.fields([
-    { name: 'fileBook', maxCount: 1 },
-    { name: 'fileCover', maxCount: 1 }
-  ]), (req, res) => {
-    const { books } = stor;
-    const {
-        title,
-        description,
-        authors,
-        favorite,
-        fileCover,
-        fileBook,
-    } = req.body;
-    let fileName;
-
-    if (req.files) {
-        const { filename ="" } = req.files["fileBook"][0];
-        fileName = filename;
-    } else {
-        res.json("file error");
-        return;
-    }
-
-    const { id } = req.params;
-    const idx = books.findIndex((el) => el.id === id);
-
-    if (idx !== -1) {
-        books[idx] = {
-            ...books[idx],
+        const newBook = new Book(
             title,
             description,
             authors,
@@ -135,12 +72,100 @@ router.post("/update/:id", fileMiddleware.fields([
             fileCover,
             fileName,
             fileBook,
-        };
-        res.redirect(`/view/${id}`);
+        );
+        books.push(newBook);
+        res.redirect("/");
+    }
+);
+
+router.get("/view/:id", (req, res) => {
+    const { books } = stor;
+    const { id } = req.params;
+    const idx = books.findIndex((el) => el.id === id);
+    axios
+        .post(`http://${ADDRESS}:3001/counter/${id}/incr`)
+        .then(() => {
+            axios
+                .get(`http://${ADDRESS}:3001/counter/${id}`)
+                .then((response) => {
+                    if (idx !== -1) {
+                        res.render("books/view", {
+                            title: "Books | view",
+                            books: books[idx],
+                            views: response.data,
+                        });
+                    } else {
+                        res.status(404).redirect("/404");
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+});
+router.get("/update/:id", (req, res) => {
+    const { books } = stor;
+    const { id } = req.params;
+    const idx = books.findIndex((el) => el.id === id);
+
+    if (idx !== -1) {
+        res.render("books/update", {
+            title: "Books | update",
+            books: books[idx],
+        });
     } else {
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 });
+router.post(
+    "/update/:id",
+    fileMiddleware.fields([
+        { name: "fileBook", maxCount: 1 },
+        { name: "fileCover", maxCount: 1 },
+    ]),
+    (req, res) => {
+        const { books } = stor;
+        const {
+            title,
+            description,
+            authors,
+            favorite,
+            fileCover,
+            fileBook,
+        } = req.body;
+        let fileName;
+
+        if (req.files) {
+            const { filename = "" } = req.files["fileBook"][0];
+            fileName = filename;
+        } else {
+            res.json("file error");
+            return;
+        }
+
+        const { id } = req.params;
+        const idx = books.findIndex((el) => el.id === id);
+
+        if (idx !== -1) {
+            books[idx] = {
+                ...books[idx],
+                title,
+                description,
+                authors,
+                favorite,
+                fileCover,
+                fileName,
+                fileBook,
+            };
+            res.redirect(`/view/${id}`);
+        } else {
+            res.status(404).redirect("/404");
+        }
+    }
+);
 
 router.post("/delete/:id", (req, res) => {
     const { books } = stor;
@@ -150,7 +175,7 @@ router.post("/delete/:id", (req, res) => {
         books.splice(idx, 1);
         res.redirect(`/`);
     } else {
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 });
 
@@ -165,12 +190,12 @@ router.get("/:id/download", (req, res) => {
             `${fileName.split("_filename_").pop()}`,
             (err) => {
                 if (err) {
-                    res.status(404).redirect('/404');
+                    res.status(404).redirect("/404");
                 }
             }
         );
     } else {
-        res.status(404).redirect('/404');
+        res.status(404).redirect("/404");
     }
 });
 module.exports = router;

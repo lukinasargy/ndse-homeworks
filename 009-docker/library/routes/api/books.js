@@ -12,10 +12,11 @@ const stor = {
         `books ${el}`,
         `description books ${el}`,
         `authors ${el}`,
-        `favorite ${el}`,
+        false,
         `fileCover ${el}`,
-        `fileName ${el}`,
-        `fileBook ${el}`
+        `2021-02-22T21-32-00.287Z_filename_book.pdf`,
+        `fileBook ${el}`,
+        el,
     );
     stor.books.push(newBook);
 });

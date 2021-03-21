@@ -4,8 +4,6 @@ const router = express.Router();
 const { Book } = require("../models");
 const fileMiddleware = require("../middleware/file");
 
-const ADDRESS = process.env.ADDRESS || "localhost";
-
 const stor = {
     books: [],
 };
@@ -83,10 +81,10 @@ router.get("/view/:id", (req, res) => {
     const { id } = req.params;
     const idx = books.findIndex((el) => el.id === id);
     axios
-        .post(`http://${ADDRESS}:3001/counter/${id}/incr`)
+        .post(`http://counter:3001/counter/${id}/incr`)
         .then(() => {
             axios
-                .get(`http://${ADDRESS}:3001/counter/${id}`)
+                .get(`http://counter:3001/counter/${id}`)
                 .then((response) => {
                     if (idx !== -1) {
                         res.render("books/view", {

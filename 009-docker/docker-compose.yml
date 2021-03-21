@@ -4,8 +4,8 @@ services:
     build: ./counter
     ports: 
       - 3001:3001
-    env_file:
-    - ./counter/.env
+    environment:
+      - PORT=3001
     command: npm start
     volumes: 
       - ./counter:/009-docker/counter
@@ -13,7 +13,6 @@ services:
     build: ./library
     ports: 
       - 3000:3000
-    env_file:
-    - ./library/.env
-
+    environment:
+      - PORT=3000
     command: npm start

@@ -4,26 +4,8 @@ const router = express.Router();
 const { Book } = require("../models");
 const fileMiddleware = require("../middleware/file");
 
-const stor = {
-    books: [],
-};
-
-[1, 2, 3].map((el) => {
-    const newBook = new Book(
-        `books ${el}`,
-        `description books ${el}`,
-        `authors ${el}`,
-        false,
-        `fileCover ${el}`,
-        `2021-02-22T21-32-00.287Z_filename_book.pdf`,
-        `fileBook ${el}`,
-        `${el}`,
-    );
-    stor.books.push(newBook);
-});
-
-router.get("/", (req, res) => {
-    const { books } = stor;
+router.get("/", async (req, res) => {
+    const books = await Book.find();
     res.render("books/index", {
         title: "Books",
         books: books,
@@ -36,6 +18,7 @@ router.get("/create", (req, res) => {
         books: {},
     });
 });
+
 router.post(
     "/create",
     fileMiddleware.fields([

@@ -1,0 +1,21 @@
+{
+    "name": "1.01-nodejs-typescript",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc -w",
+        "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx src",
+        "eslint:dump": "eslint --print-config ./.eslintrc.json"
+    },
+    "keywords": [],
+    "author": "Sargy",
+    "license": "ISC",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.22.0",
+        "eslint": "^7.24.0",
+        "typescript": "^4.2.4"
+    }
+}
